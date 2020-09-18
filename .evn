@@ -1,0 +1,4 @@
+- DB_PORT=3308
+- DB_NAME=demoSpringSecurity
+- DB_USER=root
+- DB_PASS=son1808
