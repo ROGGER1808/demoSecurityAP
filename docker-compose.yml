@@ -3,7 +3,8 @@ version: '3.7'
 services:
   #service 1: definition of mysql database
   db:
-    image: mysql:latest
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
     container_name: mysql-db
     environment:
       - MYSQL_DATABASE=springSecurity
@@ -15,6 +16,8 @@ services:
     volumes:
       - ./data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
+    cap_add:
+      - SYS_NICE
 
 
   #service 2: definition of phpMyAdmin
