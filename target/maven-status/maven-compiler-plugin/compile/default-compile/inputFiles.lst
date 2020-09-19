@@ -13,6 +13,7 @@
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/utils/JwtUtil.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/repositories/StudentRepository.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/exceptions/CustomGlobalExceptionHandler.java
+/Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/responseModels/TokenResponse.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/entity/User.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/entity/Role.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/controller/HomeController.java

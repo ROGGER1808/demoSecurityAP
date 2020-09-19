@@ -1,5 +1,6 @@
 com/transon/securityDemo/jwt/JwtAuthenticationFilter.class
 com/transon/securityDemo/exceptions/NotFoundEntityException.class
+com/transon/securityDemo/controller/HomeController.class
 com/transon/securityDemo/auth/MyUserDetail.class
 com/transon/securityDemo/repositories/UserRepository.class
 com/transon/securityDemo/controller/StudentController.class
@@ -13,5 +14,7 @@ com/transon/securityDemo/exceptions/CustomGlobalExceptionHandler.class
 com/transon/securityDemo/entity/User.class
 com/transon/securityDemo/controller/AuthController.class
 com/transon/securityDemo/jwt/UsernameAndPasswordAuthenticationRequest.class
+com/transon/securityDemo/responseModels/TokenResponse.class
+com/transon/securityDemo/configs/SwaggerConfig.class
 com/transon/securityDemo/entity/Student.class
 com/transon/securityDemo/sercurity/ApplicationSecurityConfig.class
