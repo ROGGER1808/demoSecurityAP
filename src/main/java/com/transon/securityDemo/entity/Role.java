@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @Data
@@ -15,7 +15,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(message = "name is required!")
+    @NotEmpty(message = "name is required!")
     @Column(unique = true, length = 20)
     private String name;
 

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/students")
+@RequestMapping("/api/v1/management/students")
 public class StudentController {
     private final StudentRepository studentRepository;
     final Environment evn;

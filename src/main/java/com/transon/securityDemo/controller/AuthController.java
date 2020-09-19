@@ -6,6 +6,7 @@ import com.transon.securityDemo.entity.User;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
 import com.transon.securityDemo.repositories.RoleRepository;
 import com.transon.securityDemo.repositories.UserRepository;
+import com.transon.securityDemo.responseModels.TokenResponse;
 import com.transon.securityDemo.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,7 +60,7 @@ public class AuthController {
         final UserDetails userDetails = userDetailService
                 .loadUserByUsername(authenticationRequest.getUsername());
         final String jwt = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new TokenResponse(jwt));
     }
 
     @PostMapping("/register")

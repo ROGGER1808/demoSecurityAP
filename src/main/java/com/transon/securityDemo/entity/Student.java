@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -15,9 +17,10 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(message = "name is required!")
+    @NotEmpty(message = "name is required!")
     private String name;
 
     @NotNull(message = "age is required!")
+    @Min(value = 1, message = "age cannot be less than 1!")
     private int age;
 }

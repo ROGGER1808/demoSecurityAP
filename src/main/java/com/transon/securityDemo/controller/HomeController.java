@@ -9,5 +9,10 @@ public class HomeController {
     public String home() {
         return "redirect:/swagger-ui.html";
     }
+
+    @RequestMapping("/")
+    public String hello() {
+        return "Welcome to here!";
+    }
 }
 

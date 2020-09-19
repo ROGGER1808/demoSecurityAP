@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,16 +15,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(message = "username is required!")
+    @NotEmpty(message = "username is required!")
     @Column(unique = true, nullable = false, length = 100)
     private String username;
 
-    @NotNull(message = "password is required!")
+    @NotEmpty(message = "password is required!")
     @Column(nullable = false)
     private String password;
 
     @Email(message = "Invalid email!")
-    @NotNull(message = "password is required!")
+    @NotEmpty(message = "password is required!")
     @Column(unique = true, nullable = false, length = 200)
     private String email;
 
