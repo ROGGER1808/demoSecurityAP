@@ -1,8 +1,10 @@
 package com.transon.securityDemo.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@CrossOrigin(origins = "*")
 @Controller //note - this is a spring-boot controller, not @RestController
 public class HomeController {
     @RequestMapping("/swagger")
