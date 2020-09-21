@@ -6,6 +6,7 @@ import com.transon.securityDemo.entity.User;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
 import com.transon.securityDemo.repositories.RoleRepository;
 import com.transon.securityDemo.repositories.UserRepository;
+import com.transon.securityDemo.responseEntity.ResponseRegisterModel;
 import com.transon.securityDemo.responseModels.TokenResponse;
 import com.transon.securityDemo.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class AuthController {
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return ResponseEntity.ok("success!");
+        return ResponseEntity.ok(new ResponseRegisterModel("true"));
     }
 
 }
