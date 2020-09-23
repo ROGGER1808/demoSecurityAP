@@ -2,7 +2,7 @@ package com.transon.securityDemo.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.transon.securityDemo.responseEntity.ResponseUploadFile;
+import com.transon.securityDemo.responseModel.ResponseUploadFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

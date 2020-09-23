@@ -1,16 +1,18 @@
 package com.transon.securityDemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
-public class User {
+public class User extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -28,6 +30,20 @@ public class User {
     @Column(unique = true, nullable = false, length = 200)
     private String email;
 
+    @Column(name = "avatar")
+    private String avatar;
+
+    @NotEmpty(message = "fullname is required!")
+    @Column(nullable = false, length = 250)
+    private String fullname;
+
+    @NotEmpty(message = "phone is required!")
+    @Column(nullable = false, length = 11)
+    private String phone;
+
+
+
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "userRole",
             joinColumns = @JoinColumn(name = "user_id"),

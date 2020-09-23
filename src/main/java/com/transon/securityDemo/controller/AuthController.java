@@ -6,9 +6,11 @@ import com.transon.securityDemo.entity.User;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
 import com.transon.securityDemo.repositories.RoleRepository;
 import com.transon.securityDemo.repositories.UserRepository;
-import com.transon.securityDemo.responseEntity.ResponseRegisterModel;
-import com.transon.securityDemo.responseModels.TokenResponse;
+import com.transon.securityDemo.responseModel.ResponseMessage;
+import com.transon.securityDemo.responseModel.ResponseRegisterModel;
+import com.transon.securityDemo.responseModel.TokenResponse;
 import com.transon.securityDemo.utils.JwtUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Set;
 
 @CrossOrigin(origins = "*")
@@ -68,11 +71,21 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> createAuthenticationToken(
             @RequestBody @Valid User user) throws Exception {
+
+        if (userRepository.existsUserByEmail(user.getEmail())
+                || userRepository.existsUserByUsername(user.getUsername())){
+
+            return new ResponseEntity<>(new ResponseMessage("username or email  already exist!"),
+                    HttpStatus.BAD_REQUEST);
+
+        }
+
         Role role = roleRepository.findByName("USER");
         Set<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreatedAt(new Date());
         userRepository.save(user);
         return ResponseEntity.ok(new ResponseRegisterModel("true"));
     }

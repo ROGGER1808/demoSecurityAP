@@ -16,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -46,11 +49,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST , "/api/v1/auth/**").permitAll()
                 .antMatchers(HttpMethod.POST , "/api/v1/upload/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/management/students/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/api/v1/management/students/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/api/v1/management/students/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/management/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/v1/management/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/v1/management/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/v1/management/roles/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/v1/management/users/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/v1/management/students/**").hasRole("USER")
-                .antMatchers(HttpMethod.GET, "/api/v1/management/students").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/api/v1/management/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/swagger").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger/**").permitAll()
                 .antMatchers("/", "/css/**", "/js/**", "index", "/home").permitAll()
@@ -72,5 +77,12 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 }
