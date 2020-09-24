@@ -39,6 +39,7 @@ public class UserController {
         return  new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "*")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody RequestUpdateUser userRequest){
 
