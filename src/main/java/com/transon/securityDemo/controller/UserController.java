@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/management/users")
 public class UserController {
