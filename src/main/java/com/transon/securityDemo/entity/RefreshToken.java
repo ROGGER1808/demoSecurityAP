@@ -18,7 +18,7 @@ public class RefreshToken extends AbstractEntity {
     @NaturalId(mutable = true)
     private String token;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 

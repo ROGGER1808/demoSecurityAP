@@ -41,7 +41,7 @@ public class User extends AbstractEntity implements Serializable {
     @Column(nullable = false, length = 11)
     private String phone;
 
-    @OneToOne(optional = false, mappedBy = "user")
+    @OneToOne( mappedBy = "user")
     private RefreshToken refreshToken;
 
 

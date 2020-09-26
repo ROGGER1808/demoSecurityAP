@@ -69,7 +69,12 @@ public class AuthService {
         if (userDetailService.getUser() == null) {
             throw new MessageException("Error userService!");
         }
+        if (userDetailService.getUser().getRefreshToken() != null){
+            refreshTokenService.deleteById(userDetailService.getUser().getRefreshToken().getId());
+        }
+
         RefreshToken refreshToken = refreshTokenService.createRefreshToken();
+        userRepository.save(userDetailService.getUser());
         refreshToken.setUser(userDetailService.getUser());
         refreshTokenService.save(refreshToken);
         return ResponseEntity.ok(new TokenResponse(token, refreshToken.getToken()));
