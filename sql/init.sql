@@ -1,4 +1,4 @@
-CREATE TABLE `department` (
+REATE TABLE `department` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `created_at` datetime(6) DEFAULT NULL,
   `created_by` varchar(255) DEFAULT NULL,
@@ -94,13 +94,12 @@ CREATE TABLE `user_role` (
   CONSTRAINT `FKa68196081fvovjhkek5m97n3y` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `role` (`created_at`, `created_by`, `is_active`, `updated_at`, `updated_by`, `name`) VALUES
-( '2020-09-26 09:13:56.421000', NULL, b'1', NULL, NULL, 'ADMIN'),
-( '2020-09-26 09:14:01.903000', NULL, b'1', NULL, NULL, 'USER');
+INSERT INTO `role` (`id`, `created_at`, `created_by`, `is_active`, `updated_at`, `updated_by`, `name`) VALUES
+('1', '2020-09-26 09:13:56.421000', NULL, b'1', NULL, NULL, 'ADMIN'),
+('2', '2020-09-26 09:14:01.903000', NULL, b'1', NULL, NULL, 'USER');
 
-INSERT INTO `user` (`created_at`, `created_by`, `is_active`, `updated_at`, `updated_by`, `avatar`, `email`, `fullname`, `password`, `phone`, `username`) VALUES
-('2020-09-26 09:14:06.544000', NULL, b'1', NULL, NULL, 'https://thumbs-prod.si-cdn.com/nnJARGtKrLypH4y3Vov2zGTG4xw=/fit-in/1600x0/filters:focal(554x699:555x700)/https://public-media.si-cdn.com/filer/a4/04/a404c799-7118-459a-8de4-89e4a44b124f/img_1317.jpg', 'admin@gmail.com', 'user', '$2a$10$kt.OP67e78I8OLnMIKBgeelahrRY1vRKTFu0iJAi0znGjmdgTB8si', '09784765976', 'admin');
+INSERT INTO `user` (`id`, `created_at`, `created_by`, `is_active`, `updated_at`, `updated_by`, `avatar`, `email`, `fullname`, `password`, `phone`, `username`) VALUES
+('1', '2020-09-26 09:14:06.544000', NULL, b'1', NULL, NULL, 'https://thumbs-prod.si-cdn.com/nnJARGtKrLypH4y3Vov2zGTG4xw=/fit-in/1600x0/filters:focal(554x699:555x700)/https://public-media.si-cdn.com/filer/a4/04/a404c799-7118-459a-8de4-89e4a44b124f/img_1317.jpg', 'admin@gmail.com', 'user', '$2a$10$kt.OP67e78I8OLnMIKBgeelahrRY1vRKTFu0iJAi0znGjmdgTB8si', '09784765976', 'admin');
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
 ('1', '1');
-
