@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -35,7 +34,6 @@ public class DepartmentController {
             return new ResponseEntity<>(new ResponseMessage("name already exist!"),
                     HttpStatus.BAD_REQUEST);
         }
-        department.setCreatedAt(new Date());
         departmentRepository.save(department);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
@@ -69,5 +67,13 @@ public class DepartmentController {
         departmentRepository.save(department);
 
         return  new ResponseEntity<>(new ResponseMessage("deleted!"), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/employees")
+    public ResponseEntity<?> getEmployees(@PathVariable Long id){
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundEntityException(id, "Department"));
+
+        return  new ResponseEntity<>(department.getEmployees(), HttpStatus.OK);
     }
 }

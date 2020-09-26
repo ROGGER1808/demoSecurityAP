@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class MyUserDetailService implements UserDetailsService {
 
     final UserRepository userRepository;
+    private User user;
 
     public MyUserDetailService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -22,7 +23,15 @@ public class MyUserDetailService implements UserDetailsService {
         if (user == null){
             throw new UsernameNotFoundException("not exist username: " + username);
         }
-
+        this.user = user;
         return new MyUserDetail(user);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

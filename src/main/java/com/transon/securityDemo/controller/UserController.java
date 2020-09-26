@@ -58,7 +58,6 @@ public class UserController {
                     user1.setEmail(userRequest.getEmail());
                     user1.setFullname(userRequest.getFullname());
                     user1.setPhone(userRequest.getPhone());
-                    user1.setUpdatedAt(new Date());
                     return userRepository.save(user1);
                 })
                 .orElseThrow(() -> new NotFoundEntityException(id, "User"));

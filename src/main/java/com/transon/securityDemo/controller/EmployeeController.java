@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -41,7 +40,6 @@ public class EmployeeController {
                     .orElseThrow(() -> new NotFoundEntityException(employeeRequest.getDepartmentId(), "Department"));
             employee.setDepartment(department);
         }
-        employee.setCreatedAt(new Date());
         employeeRepository.save(employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }

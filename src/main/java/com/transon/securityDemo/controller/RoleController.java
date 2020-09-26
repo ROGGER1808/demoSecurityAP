@@ -1,6 +1,7 @@
 package com.transon.securityDemo.controller;
 
 import com.transon.securityDemo.entity.Role;
+import com.transon.securityDemo.exceptions.MessageException;
 import com.transon.securityDemo.exceptions.NotFoundEntityException;
 import com.transon.securityDemo.repositories.RoleRepository;
 import com.transon.securityDemo.responseModel.ResponseMessage;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -30,7 +30,10 @@ public class RoleController {
 
     @PostMapping
     public ResponseEntity<?> create( @RequestBody @Valid Role role){
-        role.setCreatedAt(new Date());
+        Role rolee = roleRepository.findByName(role.getName());
+        if (rolee != null) {
+            throw new MessageException("name already exist!");
+        }
         roleRepository.save(role);
         return new ResponseEntity<>(role, HttpStatus.OK);
     }
