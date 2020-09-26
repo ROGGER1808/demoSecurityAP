@@ -11,7 +11,7 @@ import java.time.Instant;
 public class RefreshToken extends AbstractEntity {
     @Id
     @Column(name = "token_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "token", nullable = false, unique = true)

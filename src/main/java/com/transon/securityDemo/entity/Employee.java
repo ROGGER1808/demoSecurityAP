@@ -17,7 +17,7 @@ import java.util.Date;
 @Entity
 public class Employee extends AbstractEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty(message = "fullname is required!")
