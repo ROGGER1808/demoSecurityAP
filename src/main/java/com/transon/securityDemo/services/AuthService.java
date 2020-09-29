@@ -9,12 +9,13 @@ import com.transon.securityDemo.exceptions.MessageException;
 import com.transon.securityDemo.exceptions.TokenRefreshException;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
 import com.transon.securityDemo.mapper.UserMapper;
-import com.transon.securityDemo.repositories.RoleRepository;
-import com.transon.securityDemo.repositories.UserRepository;
 import com.transon.securityDemo.requestModel.RequestRegisterModel;
 import com.transon.securityDemo.requestModel.RequestUpdatePasswordModel;
 import com.transon.securityDemo.responseModel.ResponseMessage;
+import com.transon.securityDemo.responseModel.ResponseUserInfor;
 import com.transon.securityDemo.responseModel.TokenResponse;
+import com.transon.securityDemo.services.impl.RoleService;
+import com.transon.securityDemo.services.impl.UserService;
 import com.transon.securityDemo.utils.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,19 +37,21 @@ public class AuthService {
     private final MyUserDetailService userDetailService;
     private final JwtUtil jwtTokenUtil;
     private final RefreshTokenService refreshTokenService;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final UserService userService;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthService(AuthenticationManager authenticationManager, MyUserDetailService userDetailService, JwtUtil jwtTokenUtil, RefreshTokenService refreshTokenService, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(AuthenticationManager authenticationManager, MyUserDetailService userDetailService, JwtUtil jwtTokenUtil,
+                       RefreshTokenService refreshTokenService, UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userDetailService = userDetailService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.refreshTokenService = refreshTokenService;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.userService = userService;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     public ResponseEntity<?> authenticate(UsernameAndPasswordAuthenticationRequest authenticationRequest) throws Exception {
         try {
@@ -74,29 +77,30 @@ public class AuthService {
         }
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken();
-        userRepository.save(userDetailService.getUser());
+        userService.save(userDetailService.getUser());
         refreshToken.setUser(userDetailService.getUser());
         refreshTokenService.save(refreshToken);
-        return ResponseEntity.ok(new TokenResponse(token, refreshToken.getToken()));
+        ResponseUserInfor userInfor = UserMapper.INSTANCE.UserToUserInfor(userDetailService.getUser());
+        return ResponseEntity.ok(new TokenResponse(token, refreshToken.getToken(), userInfor));
     }
 
     public ResponseEntity<?> register(RequestRegisterModel registerModel) {
 
-        if (userRepository.existsUserByEmail(registerModel.getEmail())
-                || userRepository.existsUserByUsername(registerModel.getUsername())) {
+        if (userService.existsUserByEmail(registerModel.getEmail())
+                || userService.existsUserByUsername(registerModel.getUsername())) {
 
             return new ResponseEntity<>(new ResponseMessage("username or email  already exist!"),
                     HttpStatus.BAD_REQUEST);
 
         }
 
-        Role role = roleRepository.findByName("USER");
+        Role role = roleService.findByName("USER");
         Set<Role> roles = registerModel.getRoles();
         roles.add(role);
         registerModel.setRoles(roles);
         registerModel.setPassword(passwordEncoder.encode(registerModel.getPassword()));
         User user = UserMapper.INSTANCE.UserRequestToUser(registerModel);
-        userRepository.save(user);
+        userService.save(user);
         return new ResponseEntity<>(new ResponseMessage("success!"), HttpStatus.OK);
     }
 
@@ -112,9 +116,9 @@ public class AuthService {
                     HttpStatus.BAD_REQUEST);
         }
         String newPass = passwordEncoder.encode(passwordModel.getNewPassword());
-        User user = userRepository.findByUsername(userDetails.getUsername());
+        User user = userService.findByUsername(userDetails.getUsername());
         user.setPassword(newPass);
-        userRepository.save(user);
+        userService.save(user);
         return ResponseEntity.ok(new ResponseMessage("success!"));
     }
 
@@ -126,10 +130,15 @@ public class AuthService {
                     return rfToken;
                 }).orElseThrow(() -> new TokenRefreshException(refreshToken,
                         "Missing refresh token in database.Please login again")));
-        User user = userRepository.findUserByRefreshToken(rftoken.get());
+        User user = rftoken.get().getUser();
+        if (user == null) {
+            new ResponseEntity<>(new ResponseMessage("cannot find user with this refresh token!"),
+                    HttpStatus.BAD_REQUEST);
+        }
         MyUserDetail myUserDetail = new MyUserDetail(user);
         String token = jwtTokenUtil.generateToken(myUserDetail);
-        return ResponseEntity.ok(new TokenResponse(token, refreshToken));
+        ResponseUserInfor userInfor = UserMapper.INSTANCE.UserToUserInfor(user);
+        return ResponseEntity.ok(new TokenResponse(token, refreshToken, userInfor));
     }
 
 }

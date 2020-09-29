@@ -3,8 +3,8 @@ package com.transon.securityDemo.controller;
 import com.transon.securityDemo.entity.Role;
 import com.transon.securityDemo.exceptions.MessageException;
 import com.transon.securityDemo.exceptions.NotFoundEntityException;
-import com.transon.securityDemo.repositories.RoleRepository;
 import com.transon.securityDemo.responseModel.ResponseMessage;
+import com.transon.securityDemo.services.IRoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,31 +16,30 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/management/roles")
 public class RoleController {
 
-    private final RoleRepository roleRepository;
+    private final IRoleService roleService;
 
-    public RoleController(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public RoleController(IRoleService roleService) {
+        this.roleService = roleService;
     }
-
 
     @GetMapping
     public ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(roleRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> create( @RequestBody @Valid Role role){
-        Role rolee = roleRepository.findByName(role.getName());
+        Role rolee = roleService.findByName(role.getName());
         if (rolee != null) {
             throw new MessageException("name already exist!");
         }
-        roleRepository.save(role);
+        roleService.save(role);
         return new ResponseEntity<>(role, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable Long id){
-        Role role = roleRepository.findById(id)
+        Role role = roleService.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException(id, "Role"));
 
         return  new ResponseEntity<>(role, HttpStatus.OK);
@@ -49,10 +48,10 @@ public class RoleController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Role roleRequest){
 
-        Role role = roleRepository.findById(id)
+        Role role = roleService.findById(id)
                 .map(role1 -> {
                     role1.setName(roleRequest.getName());
-                    return roleRepository.save(role1);
+                    return roleService.save(role1);
                 })
                 .orElseThrow(() -> new NotFoundEntityException(id, "Role"));
 
@@ -61,10 +60,10 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?>  delete(@PathVariable Long id){
-        Role role = roleRepository.findById(id)
+        Role role = roleService.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException(id, "Role"));
         role.setActive(false);
-        roleRepository.save(role);
+        roleService.save(role);
 
         return  new ResponseEntity<>(new ResponseMessage("deleted!"), HttpStatus.OK);
     }

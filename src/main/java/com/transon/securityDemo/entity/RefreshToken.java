@@ -1,6 +1,8 @@
 package com.transon.securityDemo.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -18,6 +20,8 @@ public class RefreshToken extends AbstractEntity {
     @NaturalId(mutable = true)
     private String token;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "user_id", unique = true)
     private User user;

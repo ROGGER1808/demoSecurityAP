@@ -22,6 +22,9 @@ public class Department extends AbstractEntity implements Serializable {
     @Column(unique = true, nullable = false, length = 250)
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @JsonIgnore
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
