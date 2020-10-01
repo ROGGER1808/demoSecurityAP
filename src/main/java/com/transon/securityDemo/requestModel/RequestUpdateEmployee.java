@@ -35,4 +35,6 @@ public class RequestUpdateEmployee {
     private Gender gender;
 
     private Long departmentId;
+
+    private Boolean isActive = true;
 }

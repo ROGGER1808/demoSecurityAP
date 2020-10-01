@@ -22,7 +22,7 @@ public abstract class AbstractEntity {
     private String updatedBy;
 
     @Column(name = "isActive")
-    private boolean isActive = true;
+    private Boolean isActive = true;
 
     public Date getCreatedAt() {
         return createdAt;
@@ -58,11 +58,11 @@ public abstract class AbstractEntity {
         this.updatedBy = updatedBy;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         isActive = active;
     }
 }

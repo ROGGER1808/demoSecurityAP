@@ -112,6 +112,9 @@ public class DepartmentController {
                 .map(department1 -> {
                     department1.setName(departmentRequest.getName());
                     department1.setDescription(departmentRequest.getDescription());
+                    if (departmentRequest.isActive() != null){
+                        department1.setActive(departmentRequest.isActive());
+                    }
                     return departmentService.save(department1);
                 })
                 .orElseThrow(() -> new NotFoundEntityException(id, "Department"));

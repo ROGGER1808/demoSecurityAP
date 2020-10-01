@@ -131,7 +131,7 @@ public class EmployeeController {
         Employee employee = employeeService.findById(id)
                 .map(employee1 -> {
                     if (employeeRequest.getDepartmentId() != null) {
-                        Department department = departmentService.findById(id)
+                        Department department = departmentService.findById(employeeRequest.getDepartmentId())
                                 .orElseThrow(() -> new NotFoundEntityException(employeeRequest
                                         .getDepartmentId(), "Department"));
                         if (!department.isActive()) {
@@ -146,6 +146,9 @@ public class EmployeeController {
                     employee1.setGender(employeeRequest.getGender());
                     employee1.setPhone(employeeRequest.getPhone());
                     employee1.setSalary(employeeRequest.getSalary());
+                    if (employeeRequest.getIsActive() != null){
+                        employee1.setActive(employeeRequest.getIsActive());
+                    }
                     return employeeService.save(employee1);
                 })
                 .orElseThrow(() -> new NotFoundEntityException(id, "Employee"));
