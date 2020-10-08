@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class DepartmentService implements IDepartmentService {
@@ -36,7 +37,7 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         departmentRepository.deleteById(id);
     }
 
@@ -46,7 +47,7 @@ public class DepartmentService implements IDepartmentService {
     }
 
     @Override
-    public Optional<Department> findById(Long id) {
+    public Optional<Department> findById(String id) {
         return departmentRepository.findById(id);
     }
 
@@ -63,5 +64,20 @@ public class DepartmentService implements IDepartmentService {
     @Override
     public Page<Department> findAllByNameContaining(String title, Pageable pageable) {
         return departmentRepository.findAllByNameContaining(title, pageable);
+    }
+
+    @Override
+    public Set<Department> findDepartmentsByDepartmentCodeIn(Set<String> departmentNames) {
+        return departmentRepository.findDepartmentsByDepartmentCodeIn(departmentNames);
+    }
+
+    @Override
+    public Optional<Department> findDepartmentsByDepartmentCode(String code) {
+        return departmentRepository.findDepartmentsByDepartmentCode(code);
+    }
+
+    @Override
+    public void deleteDepartmentByDepartmentCode(String code) {
+        departmentRepository.deleteDepartmentByDepartmentCode(code);
     }
 }

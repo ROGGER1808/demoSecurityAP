@@ -3,6 +3,9 @@ package com.transon.securityDemo.services;
 import com.transon.securityDemo.entity.Department;
 import com.transon.securityDemo.entity.RefreshToken;
 import com.transon.securityDemo.entity.User;
+import com.transon.securityDemo.requestModel.RequestUpdateUser;
+import com.transon.securityDemo.responseModel.ResponseUserDetail;
+import com.transon.securityDemo.responseModel.ResponseUserInfor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +17,7 @@ public interface IUserService {
     List<User> findAll();
 
     List<User> findAll(Sort sort);
+    User update(RequestUpdateUser user, Long id);
 
     <S extends User> S save(S s);
 
@@ -35,4 +39,5 @@ public interface IUserService {
 
     Page<User> findAllByFullnameContaining(String title, Pageable pageable);
 
+    ResponseUserDetail userToUserResponse(User user);
 }

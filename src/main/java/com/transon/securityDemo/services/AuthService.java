@@ -14,7 +14,6 @@ import com.transon.securityDemo.requestModel.RequestUpdatePasswordModel;
 import com.transon.securityDemo.responseModel.ResponseMessage;
 import com.transon.securityDemo.responseModel.ResponseUserInfor;
 import com.transon.securityDemo.responseModel.TokenResponse;
-import com.transon.securityDemo.services.impl.RoleService;
 import com.transon.securityDemo.services.impl.UserService;
 import com.transon.securityDemo.utils.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -27,8 +26,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -38,17 +39,15 @@ public class AuthService {
     private final JwtUtil jwtTokenUtil;
     private final RefreshTokenService refreshTokenService;
     private final UserService userService;
-    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     public AuthService(AuthenticationManager authenticationManager, MyUserDetailService userDetailService, JwtUtil jwtTokenUtil,
-                       RefreshTokenService refreshTokenService, UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+                       RefreshTokenService refreshTokenService, UserService userService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userDetailService = userDetailService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.refreshTokenService = refreshTokenService;
         this.userService = userService;
-        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -69,18 +68,22 @@ public class AuthService {
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
-        if (userDetailService.getUser() == null) {
+        User user = userDetailService.getUser();
+        if (user == null) {
             throw new MessageException("Error userService!");
         }
-        if (userDetailService.getUser().getRefreshToken() != null){
-            refreshTokenService.deleteById(userDetailService.getUser().getRefreshToken().getId());
+        if (user.getRefreshToken() != null){
+            refreshTokenService.deleteById(user.getRefreshToken().getId());
         }
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken();
-        userService.save(userDetailService.getUser());
-        refreshToken.setUser(userDetailService.getUser());
+        userService.save(user);
+        refreshToken.setUser(user);
         refreshTokenService.save(refreshToken);
-        ResponseUserInfor userInfor = UserMapper.INSTANCE.UserToUserInfor(userDetailService.getUser());
+
+        ResponseUserInfor userInfor = UserMapper.INSTANCE.UserToUserInfor(user);
+        Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        userInfor.setRoles(roles);
         return ResponseEntity.ok(new TokenResponse(token, refreshToken.getToken(), userInfor));
     }
 
@@ -93,11 +96,6 @@ public class AuthService {
                     HttpStatus.BAD_REQUEST);
 
         }
-
-        Role role = roleService.findByName("USER");
-        Set<Role> roles = registerModel.getRoles();
-        roles.add(role);
-        registerModel.setRoles(roles);
         registerModel.setPassword(passwordEncoder.encode(registerModel.getPassword()));
         User user = UserMapper.INSTANCE.UserRequestToUser(registerModel);
         userService.save(user);

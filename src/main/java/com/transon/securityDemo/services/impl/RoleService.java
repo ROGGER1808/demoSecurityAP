@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RoleService implements IRoleService {
@@ -51,5 +52,15 @@ public class RoleService implements IRoleService {
     @Override
     public Role findByName(String name) {
         return roleRepository.findByName(name);
+    }
+
+    @Override
+    public Set<Role> findRolesByNameIn(Set<String> roleNames) {
+        return roleRepository.findRolesByNameIn(roleNames);
+    }
+
+    @Override
+    public void deleteRoleByName(String name) {
+        roleRepository.deleteRoleByName(name);
     }
 }

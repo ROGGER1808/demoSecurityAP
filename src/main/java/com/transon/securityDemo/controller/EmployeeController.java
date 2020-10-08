@@ -1,6 +1,5 @@
 package com.transon.securityDemo.controller;
 
-import com.transon.securityDemo.entity.Department;
 import com.transon.securityDemo.entity.Employee;
 import com.transon.securityDemo.exceptions.NotFoundEntityException;
 import com.transon.securityDemo.mapper.EmployeeMapper;
@@ -29,11 +28,9 @@ import java.util.Map;
 public class EmployeeController {
 
     private final IEmployeeService employeeService;
-    private final IDepartmentService departmentService;
 
-    public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService) {
+    public EmployeeController(IEmployeeService employeeService ) {
         this.employeeService = employeeService;
-        this.departmentService = departmentService;
     }
 
 
@@ -97,19 +94,6 @@ public class EmployeeController {
     public ResponseEntity<?> create(@RequestBody @Valid RequestUpdateEmployee employeeRequest) {
 
         Employee employee = EmployeeMapper.INSTANCE.employeeRequestToEmployee(employeeRequest);
-
-        if (employeeRequest.getDepartmentId() != null) {
-            Department department = departmentService.findById(employeeRequest.getDepartmentId())
-                    .orElseThrow(() -> new NotFoundEntityException(employeeRequest
-                                                                .getDepartmentId(), "Department"));
-
-            if (!department.isActive()) {
-                throw new NotFoundEntityException(employeeRequest.getDepartmentId(), "Department");
-            }
-
-            employee.setDepartment(department);
-        }
-
         employeeService.save(employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
@@ -130,15 +114,6 @@ public class EmployeeController {
 
         Employee employee = employeeService.findById(id)
                 .map(employee1 -> {
-                    if (employeeRequest.getDepartmentId() != null) {
-                        Department department = departmentService.findById(employeeRequest.getDepartmentId())
-                                .orElseThrow(() -> new NotFoundEntityException(employeeRequest
-                                        .getDepartmentId(), "Department"));
-                        if (!department.isActive()) {
-                            throw new NotFoundEntityException(employeeRequest.getDepartmentId(), "Department");
-                        }
-                        employee1.setDepartment(department);
-                    }
                     employee1.setAvatar(employeeRequest.getAvatar());
                     employee1.setBirthday(employeeRequest.getBirthday());
                     employee1.setEmail(employeeRequest.getEmail());

@@ -2,8 +2,6 @@ package com.transon.securityDemo.entity;
 
 import com.transon.securityDemo.common.Gender;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -47,10 +45,5 @@ public class Employee extends AbstractEntity implements Serializable {
     @Column(name = "gender", nullable = false)
     private Gender gender;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @ManyToOne()
-    @JoinColumn(name = "department_id")
-    private Department department;
 
 }

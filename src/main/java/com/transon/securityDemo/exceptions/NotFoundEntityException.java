@@ -1,10 +1,10 @@
 package com.transon.securityDemo.exceptions;
 
 public class NotFoundEntityException extends RuntimeException {
-    private Long id;
+    private Object id;
     private String entityName;
 
-    public NotFoundEntityException(Long id, String entityName){
+    public NotFoundEntityException(Object id, String entityName){
         this.id = id;
         this.entityName = entityName;
     }

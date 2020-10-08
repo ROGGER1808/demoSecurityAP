@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface IDepartmentService {
 
@@ -16,15 +17,21 @@ public interface IDepartmentService {
 
     <S extends Department> S save(S s);
 
-    void deleteById(Long id);
+    void deleteById(String id);
 
     void delete(Department department);
 
-    Optional<Department> findById(Long id);
+    Optional<Department> findById(String id);
 
     boolean existsDepartmentByName(String name);
 
     Page<Department> findAll(Pageable pageable);
 
     Page<Department> findAllByNameContaining(String title, Pageable pageable);
+
+    Set<Department> findDepartmentsByDepartmentCodeIn(Set<String> departmentNames);
+
+    Optional<Department> findDepartmentsByDepartmentCode(String code);
+
+    void deleteDepartmentByDepartmentCode(String code);
 }

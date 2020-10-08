@@ -1,5 +1,6 @@
 package com.transon.securityDemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -21,6 +22,7 @@ public class Role extends AbstractEntity implements Serializable {
     @Column(unique = true, length = 20)
     private String name;
 
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany(mappedBy = "roles")

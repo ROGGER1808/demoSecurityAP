@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 @Data
 public class RequestUpdateUser {
@@ -29,5 +30,5 @@ public class RequestUpdateUser {
     @Column(nullable = false, length = 250)
     private String phone;
 
-    private Long roleId;
+    private Set<String> roles;
 }

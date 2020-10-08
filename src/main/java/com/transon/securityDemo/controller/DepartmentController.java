@@ -1,9 +1,11 @@
 package com.transon.securityDemo.controller;
 
 import com.transon.securityDemo.entity.Department;
+import com.transon.securityDemo.entity.Role;
 import com.transon.securityDemo.exceptions.NotFoundEntityException;
 import com.transon.securityDemo.responseModel.ResponseMessage;
 import com.transon.securityDemo.services.IDepartmentService;
+import com.transon.securityDemo.services.IRoleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,17 +27,27 @@ import java.util.Map;
 public class DepartmentController {
 
     private final IDepartmentService departmentService;
+    private final IRoleService roleService;
 
-    public DepartmentController(IDepartmentService departmentService) {
+    public DepartmentController(IDepartmentService departmentService, IRoleService roleService) {
         this.departmentService = departmentService;
+        this.roleService = roleService;
     }
 
+    /*
+    @getAll department
+    @transon
+    */
     @GetMapping
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(departmentService.findAll(), HttpStatus.OK);
     }
 
 
+    /*
+    @getAll have sort and paging, filter
+    @transon
+    */
     @GetMapping("/format")
     public ResponseEntity<?> getAllFormat(
             @RequestParam(required = false) String filter,
@@ -86,29 +98,44 @@ public class DepartmentController {
         }
     }
 
+    /*
+    @create Department
+    @transon
+    */
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid Department department) {
-        if (departmentService.existsDepartmentByName(department.getName())) {
+        if (departmentService.existsDepartmentByName(department.getDepartmentCode())) {
 
             return new ResponseEntity<>(new ResponseMessage("name already exist!"),
                     HttpStatus.BAD_REQUEST);
         }
         departmentService.save(department);
+        Role role = new Role();
+        role.setName(department.getDepartmentCode());
+        roleService.save(role);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
-        Department department = departmentService.findById(id)
-                .orElseThrow(() -> new NotFoundEntityException(id, "Department"));
+    /*
+    @get Department by code
+    @transon
+    */
+    @GetMapping("/{departmentCode}")
+    public ResponseEntity<?> get(@PathVariable String departmentCode) {
+        Department department = departmentService.findDepartmentsByDepartmentCode(departmentCode)
+                .orElseThrow(() -> new NotFoundEntityException(departmentCode, "Department"));
 
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Department departmentRequest) {
+    /*
+    @update Department
+    @transon
+    */
+    @PutMapping("/{departmentCode}")
+    public ResponseEntity<?> update(@PathVariable String departmentCode, @Valid @RequestBody Department departmentRequest) {
 
-        Department department = departmentService.findById(id)
+        Department department = departmentService.findDepartmentsByDepartmentCode(departmentCode)
                 .map(department1 -> {
                     department1.setName(departmentRequest.getName());
                     department1.setDescription(departmentRequest.getDescription());
@@ -117,27 +144,32 @@ public class DepartmentController {
                     }
                     return departmentService.save(department1);
                 })
-                .orElseThrow(() -> new NotFoundEntityException(id, "Department"));
+                .orElseThrow(() -> new NotFoundEntityException(departmentCode, "Department"));
 
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        Department department = departmentService.findById(id)
-                .orElseThrow(() -> new NotFoundEntityException(id, "Department"));
-        department.setActive(false);
-        departmentService.save(department);
-
+    /*
+    @delete Department by code
+    @transon
+    */
+    @DeleteMapping("/{departmentCode}")
+    public ResponseEntity<?> delete(@PathVariable String departmentCode) {
+        roleService.deleteRoleByName(departmentCode);
+        departmentService.deleteDepartmentByDepartmentCode(departmentCode);
         return new ResponseEntity<>(new ResponseMessage("deleted!"), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/employees")
-    public ResponseEntity<?> getEmployees(@PathVariable Long id) {
-        Department department = departmentService.findById(id)
-                .orElseThrow(() -> new NotFoundEntityException(id, "Department"));
+    /*
+    @getUsers get users have this department
+    @transon
+    */
+    @GetMapping("/{departmentCode}/users")
+    public ResponseEntity<?> getUsers(@PathVariable String departmentCode) {
+        Department department = departmentService.findDepartmentsByDepartmentCode(departmentCode)
+                .orElseThrow(() -> new NotFoundEntityException(departmentCode, "Department"));
 
-        return new ResponseEntity<>(department.getEmployees(), HttpStatus.OK);
+        return new ResponseEntity<>(department.getUsers(), HttpStatus.OK);
     }
 
     private Sort.Direction getSortDirection(String direction) {

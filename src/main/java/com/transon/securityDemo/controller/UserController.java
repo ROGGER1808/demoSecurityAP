@@ -3,9 +3,11 @@ package com.transon.securityDemo.controller;
 import com.transon.securityDemo.entity.Role;
 import com.transon.securityDemo.entity.User;
 import com.transon.securityDemo.exceptions.NotFoundEntityException;
+import com.transon.securityDemo.mapper.UserMapper;
 import com.transon.securityDemo.requestModel.RequestUpdateUser;
 import com.transon.securityDemo.responseModel.ResponseMessage;
-import com.transon.securityDemo.services.IRoleService;
+import com.transon.securityDemo.responseModel.ResponseUserDetail;
+import com.transon.securityDemo.responseModel.ResponseUserInfor;
 import com.transon.securityDemo.services.IUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,13 +16,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -28,26 +29,45 @@ import java.util.Map;
 public class UserController {
 
     private final IUserService userService;
-    private final IRoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(IUserService userService, IRoleService roleService) {
+    public UserController(IUserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    /*
+    @getAll user
+    @transon
+    */
     @GetMapping
     public ResponseEntity<?> getAll(){
-        return ResponseEntity.ok(userService.findAll());
+        List<ResponseUserDetail> dataResponse = userService.findAll().stream()
+                .map(userService::userToUserResponse).collect(Collectors.toList());
+        return ResponseEntity.ok(dataResponse);
     }
 
+
+    /*
+    @getUser by id
+    @transon
+    */
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") Long id){
         User user = userService.findById(id)
-                .orElseThrow(() -> new NotFoundEntityException(id, "Product"));
+                .orElseThrow(() -> new NotFoundEntityException(id, "User"));
 
-        return  new ResponseEntity<>(user, HttpStatus.OK);
+        Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        ResponseUserInfor userResponse = UserMapper.INSTANCE.UserToUserInfor(user);
+        userResponse.setRoles(roles);
+
+        return  new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
+    /*
+    @getAllFormat have sort and paging, filter
+    @transon
+    */
     @GetMapping("/format")
     public ResponseEntity<?> getAllFormat(
             @RequestParam(required = false) String filter,
@@ -84,9 +104,11 @@ public class UserController {
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
+            List<ResponseUserDetail> dataResponse = users.stream()
+                    .map(userService::userToUserResponse).collect(Collectors.toList());
 
             Map<String, Object> response = new HashMap<>();
-            response.put("data", users);
+            response.put("data", dataResponse);
             response.put("currentPage", pageTuts.getNumber());
             response.put("totalItems", pageTuts.getTotalElements());
             response.put("totalPages", pageTuts.getTotalPages());
@@ -98,32 +120,26 @@ public class UserController {
         }
     }
 
+
+    /*
+    @update method
+    @transon
+    */
     @CrossOrigin(origins = "*")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody RequestUpdateUser userRequest){
-
-        User user = userService.findById(id)
-                .map(user1 -> {
-                    if (userRequest.getRoleId() != null){
-                        Role result = roleService.findById(id)
-                                .orElseThrow(() -> new NotFoundEntityException(userRequest.getRoleId(), "Role"));
-                        if (!result.isActive()){
-                            throw new NotFoundEntityException(userRequest.getRoleId(), "Role");
-                        }
-                        user1.getRoles().add(result);
-                    }
-                    user1.setPassword(userRequest.getPassword());
-                    user1.setAvatar(userRequest.getAvatar());
-                    user1.setEmail(userRequest.getEmail());
-                    user1.setFullname(userRequest.getFullname());
-                    user1.setPhone(userRequest.getPhone());
-                    return userService.save(user1);
-                })
-                .orElseThrow(() -> new NotFoundEntityException(id, "User"));
-
-        return  new ResponseEntity<>(user, HttpStatus.OK);
+        userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        User user = userService.update(userRequest, id);
+        Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        ResponseUserInfor userResponse = UserMapper.INSTANCE.UserToUserInfor(user);
+        userResponse.setRoles(roles);
+        return  new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
+    /*
+    @delete method
+    @transon
+    */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
 
@@ -135,6 +151,10 @@ public class UserController {
         return  new ResponseEntity<>(new ResponseMessage("deleted!"), HttpStatus.OK);
     }
 
+    /*
+    @getSortDirection utils method
+    @transon
+    */
     private Sort.Direction getSortDirection(String direction) {
         if (direction.equals("asc")) {
             return Sort.Direction.ASC;

@@ -1,22 +1,25 @@
 package com.transon.securityDemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.base.MoreObjects;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 public class Department extends AbstractEntity implements Serializable {
+
+    @NotNull(message = "departmentCode is required!")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "department_code")
+    private String departmentCode;
 
     @NotEmpty(message = "name is required!")
     @Column(unique = true, nullable = false, length = 250)
@@ -26,9 +29,8 @@ public class Department extends AbstractEntity implements Serializable {
     private String description;
 
     @JsonIgnore
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    private Set<Employee> employees;
-
+    @ToString.Exclude
+    @ManyToMany(mappedBy = "departments")
+    private Set<User> users = new HashSet<>();
 }

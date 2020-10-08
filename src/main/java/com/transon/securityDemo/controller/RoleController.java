@@ -3,6 +3,7 @@ package com.transon.securityDemo.controller;
 import com.transon.securityDemo.entity.Role;
 import com.transon.securityDemo.exceptions.MessageException;
 import com.transon.securityDemo.exceptions.NotFoundEntityException;
+import com.transon.securityDemo.repositories.RoleRepository;
 import com.transon.securityDemo.responseModel.ResponseMessage;
 import com.transon.securityDemo.services.IRoleService;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -17,9 +22,11 @@ import javax.validation.Valid;
 public class RoleController {
 
     private final IRoleService roleService;
+    private final RoleRepository roleRepository;
 
-    public RoleController(IRoleService roleService) {
+    public RoleController(IRoleService roleService, RoleRepository roleRepository) {
         this.roleService = roleService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping
@@ -43,6 +50,16 @@ public class RoleController {
                 .orElseThrow(() -> new NotFoundEntityException(id, "Role"));
 
         return  new ResponseEntity<>(role, HttpStatus.OK);
+    }
+
+    @GetMapping("/demo")
+    public ResponseEntity<?> getDemo(){
+        Set<String> names = new HashSet<>();
+        names.add("ADMIN");
+        names.add("DNSA");
+        Set<Role> roles = roleRepository.findRolesByNameIn(names);
+
+        return  new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
