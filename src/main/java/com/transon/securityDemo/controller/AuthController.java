@@ -1,12 +1,15 @@
 package com.transon.securityDemo.controller;
 
 
+import com.transon.securityDemo.entity.User;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
-import com.transon.securityDemo.requestModel.RequestRefreshModel;
-import com.transon.securityDemo.requestModel.RequestRegisterModel;
-import com.transon.securityDemo.requestModel.RequestUpdatePasswordModel;
+import com.transon.securityDemo.requestModel.*;
 import com.transon.securityDemo.services.AuthService;
+import com.transon.securityDemo.services.IUserService;
+import com.transon.securityDemo.utils.JwtUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,9 +20,16 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
+    private final IUserService userService;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, PasswordEncoder passwordEncoder,
+                          IUserService userService, JwtUtil jwtUtil) {
         this.authService = authService;
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/authenticate")
@@ -50,6 +60,32 @@ public class AuthController {
             @RequestBody @Valid RequestRefreshModel refreshModel) {
 
         return  authService.refreshToken(refreshModel.getRefreshToken());
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping
+    public ResponseEntity<?> update(@RequestHeader (name="Authorization") String token,
+                                    @Valid @RequestBody RequestUserSefUpdate userRq){
+
+        String username = null;
+
+        if (token != null && token.startsWith("Bearer ")){
+            token= token.substring(7);
+            username = jwtUtil.extractUsername(token);
+        }
+
+        User user = userService.findByUsername(username);
+        if (user != null){
+            user.setPassword(userRq.getPassword());
+            user.setAvatar(userRq.getAvatar());
+            user.setEmail(userRq.getEmail());
+            user.setFullname(userRq.getFullname());
+            user.setPhone(userRq.getPhone());
+            user.setPassword(passwordEncoder.encode(userRq.getPassword()));
+            return  new ResponseEntity<>(userService.save(user), HttpStatus.OK);
+        }
+
+        return  new ResponseEntity<>("error update!", HttpStatus.OK);
     }
 
 }

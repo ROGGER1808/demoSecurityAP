@@ -19,9 +19,7 @@ com/transon/securityDemo/requestModel/RequestRegisterModel.class
 com/transon/securityDemo/repositories/UserRepository.class
 com/transon/securityDemo/repositories/RefreshTokenRepository.class
 com/transon/securityDemo/services/impl/DepartmentService.class
-com/transon/securityDemo/services/CloudDinaryService.class
 com/transon/securityDemo/responseModel/ResponseRegisterModel.class
-com/transon/securityDemo/controller/TestUpload.class
 com/transon/securityDemo/services/IEmployeeService.class
 com/transon/securityDemo/repositories/RoleRepository.class
 com/transon/securityDemo/jwt/UsernameAndPasswordAuthenticationRequest.class
@@ -54,6 +52,7 @@ com/transon/securityDemo/responseModel/ResponseUploadFile.class
 com/transon/securityDemo/mapper/UserMapper.class
 com/transon/securityDemo/responseModel/TokenResponse.class
 com/transon/securityDemo/utils/JwtUtil.class
+com/transon/securityDemo/requestModel/RequestUserSefUpdate.class
 com/transon/securityDemo/SecurityDemoApplication.class
 com/transon/securityDemo/entity/RefreshToken.class
 com/transon/securityDemo/exceptions/CustomGlobalExceptionHandler.class

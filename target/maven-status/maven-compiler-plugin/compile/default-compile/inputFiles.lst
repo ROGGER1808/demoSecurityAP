@@ -1,6 +1,5 @@
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/controller/RoleController.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/configs/SwaggerConfig.java
-/Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/services/CloudDinaryService.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/repositories/DepartmentRepository.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/auth/MyUserDetail.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/jwt/JwtAuthenticationFilter.java
@@ -15,6 +14,7 @@
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/repositories/EmployeeRepository.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/responseModel/ResponseMessage.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/controller/HomeController.java
+/Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/requestModel/RequestUserSefUpdate.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/mapper/EmployeeMapper.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/controller/TestRoleController.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/repositories/UserRepository.java
@@ -27,7 +27,6 @@
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/entity/User.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/entity/Role.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/entity/Department.java
-/Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/controller/TestUpload.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/requestModel/RequestRegisterModel.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/mapper/RoleMapper.java
 /Users/transon/Downloads/securityDemo/src/main/java/com/transon/securityDemo/repositories/RefreshTokenRepository.java

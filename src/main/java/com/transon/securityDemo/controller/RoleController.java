@@ -22,11 +22,9 @@ import java.util.Set;
 public class RoleController {
 
     private final IRoleService roleService;
-    private final RoleRepository roleRepository;
 
-    public RoleController(IRoleService roleService, RoleRepository roleRepository) {
+    public RoleController(IRoleService roleService) {
         this.roleService = roleService;
-        this.roleRepository = roleRepository;
     }
 
     @GetMapping
@@ -52,16 +50,6 @@ public class RoleController {
         return  new ResponseEntity<>(role, HttpStatus.OK);
     }
 
-    @GetMapping("/demo")
-    public ResponseEntity<?> getDemo(){
-        Set<String> names = new HashSet<>();
-        names.add("ADMIN");
-        names.add("DNSA");
-        Set<Role> roles = roleRepository.findRolesByNameIn(names);
-
-        return  new ResponseEntity<>(roles, HttpStatus.OK);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody Role roleRequest){
 
@@ -79,9 +67,7 @@ public class RoleController {
     public ResponseEntity<?>  delete(@PathVariable Long id){
         Role role = roleService.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException(id, "Role"));
-        role.setActive(false);
-        roleService.save(role);
-
+        roleService.delete(role);
         return  new ResponseEntity<>(new ResponseMessage("deleted!"), HttpStatus.OK);
     }
 }
