@@ -53,7 +53,7 @@ public class DepartmentController {
             @RequestParam(required = false) String filter,
             @RequestParam(defaultValue = "0") int pageNumber,
             @RequestParam(defaultValue = "3") int pageSize,
-            @RequestParam(defaultValue = "id,desc") String[] sort) {
+            @RequestParam(defaultValue = "departmentCode,desc") String[] sort) {
 
         try {
             List<Order> orders = new ArrayList<Sort.Order>();
@@ -94,7 +94,7 @@ public class DepartmentController {
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -110,9 +110,9 @@ public class DepartmentController {
                     HttpStatus.BAD_REQUEST);
         }
         departmentService.save(department);
-        Role role = new Role();
-        role.setName(department.getDepartmentCode());
-        roleService.save(role);
+//        Role role = new Role();
+//        role.setName(department.getDepartmentCode());
+//        roleService.save(role);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
@@ -155,7 +155,7 @@ public class DepartmentController {
     */
     @DeleteMapping("/{departmentCode}")
     public ResponseEntity<?> delete(@PathVariable String departmentCode) {
-        roleService.deleteRoleByName(departmentCode);
+//        roleService.deleteRoleByName(departmentCode);
         departmentService.deleteDepartmentByDepartmentCode(departmentCode);
         return new ResponseEntity<>(new ResponseMessage("deleted!"), HttpStatus.OK);
     }

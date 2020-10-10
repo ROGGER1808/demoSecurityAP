@@ -13,9 +13,13 @@ import java.util.Set;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, String> {
     boolean existsDepartmentByName(String name);
+
     boolean existsDepartmentByDepartmentCode(String id);
+
     Page<Department> findAllByNameContaining(String title, Pageable pageable);
+
     Set<Department> findDepartmentsByDepartmentCodeIn(Set<String> departmentNames);
+
     Optional<Department> findDepartmentsByDepartmentCode(String code);
 
     @Transactional

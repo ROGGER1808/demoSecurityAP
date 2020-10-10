@@ -2,16 +2,16 @@ package com.transon.securityDemo.mapper;
 
 import com.transon.securityDemo.entity.Role;
 import com.transon.securityDemo.entity.User;
-import com.transon.securityDemo.requestModel.RequestRegisterModel;
-import com.transon.securityDemo.responseModel.ResponseUserDetail;
-import com.transon.securityDemo.responseModel.ResponseUserInfor;
+import com.transon.securityDemo.requestModel.auth.RequestRegisterModel;
+import com.transon.securityDemo.responseModel.User.ResponseUserDetail;
+import com.transon.securityDemo.responseModel.User.ResponseUserInfor;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-10-08T19:57:06+0700",
+    date = "2020-10-11T00:24:56+0700",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_265 (AdoptOpenJDK)"
 )
 public class UserMapperImpl implements UserMapper {
@@ -72,8 +72,6 @@ public class UserMapperImpl implements UserMapper {
         responseUserDetail.setPhone( user.getPhone() );
         responseUserDetail.setCreatedAt( user.getCreatedAt() );
         responseUserDetail.setUpdatedAt( user.getUpdatedAt() );
-        responseUserDetail.setCreatedBy( user.getCreatedBy() );
-        responseUserDetail.setUpdatedBy( user.getUpdatedBy() );
 
         return responseUserDetail;
     }

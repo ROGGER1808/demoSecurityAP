@@ -15,10 +15,6 @@ public abstract class AbstractEntity {
     @Column(name = "updatedAt")
     private Date updatedAt;
 
-    @Column(name = "createdBy")
-    private String createdBy;
-
-    @Column(name = "updatedBy")
     private String updatedBy;
 
     @Column(name = "isActive")
@@ -40,22 +36,6 @@ public abstract class AbstractEntity {
     @PreUpdate
     public void setUpdatedAt() {
         this.updatedAt = new Date();
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
     }
 
     public Boolean isActive() {

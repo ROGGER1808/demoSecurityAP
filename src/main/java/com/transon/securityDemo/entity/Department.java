@@ -31,6 +31,6 @@ public class Department extends AbstractEntity implements Serializable {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "departments")
+    @ManyToMany(mappedBy = "departments", cascade ={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Set<User> users = new HashSet<>();
 }

@@ -9,13 +9,14 @@ import com.transon.securityDemo.exceptions.MessageException;
 import com.transon.securityDemo.exceptions.TokenRefreshException;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
 import com.transon.securityDemo.mapper.UserMapper;
-import com.transon.securityDemo.requestModel.RequestRegisterModel;
-import com.transon.securityDemo.requestModel.RequestUpdatePasswordModel;
+import com.transon.securityDemo.requestModel.auth.RequestRegisterModel;
+import com.transon.securityDemo.requestModel.auth.RequestUpdatePasswordModel;
 import com.transon.securityDemo.responseModel.ResponseMessage;
-import com.transon.securityDemo.responseModel.ResponseUserInfor;
-import com.transon.securityDemo.responseModel.TokenResponse;
+import com.transon.securityDemo.responseModel.User.ResponseUserInfor;
+import com.transon.securityDemo.responseModel.auth.TokenResponse;
 import com.transon.securityDemo.services.impl.UserService;
 import com.transon.securityDemo.utils.JwtUtil;
+import com.transon.securityDemo.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +27,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,7 +68,8 @@ public class AuthService {
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
-        User user = userDetailService.getUser();
+        String username = jwtTokenUtil.extractUsername(token);
+        User user = userService.findByUsername(username);
         if (user == null) {
             throw new MessageException("Error userService!");
         }
@@ -84,6 +85,7 @@ public class AuthService {
         ResponseUserInfor userInfor = UserMapper.INSTANCE.UserToUserInfor(user);
         Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         userInfor.setRoles(roles);
+        userInfor.setMenus(Utils.getMenus(user.getRoles()));
         return ResponseEntity.ok(new TokenResponse(token, refreshToken.getToken(), userInfor));
     }
 

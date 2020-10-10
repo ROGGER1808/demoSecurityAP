@@ -1,7 +1,10 @@
 package com.transon.securityDemo.services;
 
 import com.transon.securityDemo.entity.Role;
+import com.transon.securityDemo.requestModel.role.RequestRoleModel;
+import com.transon.securityDemo.responseModel.role.ResponseRoleModel;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +15,9 @@ public interface IRoleService {
 
     List<Role> findAll(Sort sort);
 
-    <S extends Role> S save(S s);
+    Role save(RequestRoleModel roleModel);
+
+    ResponseRoleModel update(RequestRoleModel roleModel, Long id);
 
     void deleteById(Long id);
 
@@ -26,4 +31,5 @@ public interface IRoleService {
 
     void deleteRoleByName(String name);
 
+    void deleteRoleRaw(@Param("id") Long id);
 }

@@ -3,7 +3,10 @@ package com.transon.securityDemo.controller;
 
 import com.transon.securityDemo.entity.User;
 import com.transon.securityDemo.jwt.UsernameAndPasswordAuthenticationRequest;
-import com.transon.securityDemo.requestModel.*;
+import com.transon.securityDemo.requestModel.User.RequestUserSefUpdate;
+import com.transon.securityDemo.requestModel.auth.RequestRefreshModel;
+import com.transon.securityDemo.requestModel.auth.RequestRegisterModel;
+import com.transon.securityDemo.requestModel.auth.RequestUpdatePasswordModel;
 import com.transon.securityDemo.services.AuthService;
 import com.transon.securityDemo.services.IUserService;
 import com.transon.securityDemo.utils.JwtUtil;

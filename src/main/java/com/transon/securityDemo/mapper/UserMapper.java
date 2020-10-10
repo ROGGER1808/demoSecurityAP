@@ -1,9 +1,9 @@
 package com.transon.securityDemo.mapper;
 
 import com.transon.securityDemo.entity.User;
-import com.transon.securityDemo.requestModel.RequestRegisterModel;
-import com.transon.securityDemo.responseModel.ResponseUserDetail;
-import com.transon.securityDemo.responseModel.ResponseUserInfor;
+import com.transon.securityDemo.requestModel.auth.RequestRegisterModel;
+import com.transon.securityDemo.responseModel.User.ResponseUserDetail;
+import com.transon.securityDemo.responseModel.User.ResponseUserInfor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
