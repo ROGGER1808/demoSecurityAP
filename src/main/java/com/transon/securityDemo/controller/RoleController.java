@@ -34,7 +34,7 @@ public class RoleController {
     public ResponseEntity<?> getAll() {
 
         Set<ResponseItemRoleModel> data = roleService.findAll().stream()
-                .map(role -> new ResponseItemRoleModel(role.getName(), role.getDescription())).collect(Collectors.toSet());
+                .map(role -> new ResponseItemRoleModel(role.getId(), role.getName(), role.getDescription())).collect(Collectors.toSet());
 
         Map<String, Object> response = new HashMap<>();
         response.put("data", data);
